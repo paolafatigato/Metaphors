@@ -5,11 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Metaphor Workshop 🎡</title>
 <meta name="theme-color" content="#0a0a09">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" href="logo.png" type="image/png">
-<link rel="apple-touch-icon" href="logo.png">
-<link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Nunito:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -34,8 +29,7 @@ button,select,textarea,input{font:inherit;color:inherit}
 
 /* top bar */
 .top{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;justify-content:space-between;padding:.8rem 1.2rem;background:var(--black);color:var(--chalk);border-bottom:3px dashed var(--blue)}
-.brand{display:inline-flex;align-items:center;gap:.7rem;font:800 1.35rem var(--display);cursor:pointer;background:none;border:0;color:var(--chalk);padding:0}
-.brand img{width:42px;height:42px;border-radius:12px;object-fit:cover;border:2px solid var(--yellow);background:#fff}
+.brand{font:800 1.35rem var(--display);cursor:pointer;background:none;border:0;color:var(--chalk);padding:0}
 .stats{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
 .pill{background:var(--yellow);color:var(--black);font-weight:700;border-radius:999px;padding:.2rem .8rem;border:2px solid var(--black)}
 .pill.rank{background:var(--cream)}
@@ -155,10 +149,7 @@ footer{text-align:center;padding:1.5rem;font-size:.9rem;opacity:.9}
 <body>
 
 <header class="top">
-  <button class="brand" data-go="home" aria-label="Back to the start">
-    <img src="logo.png" alt="Metaphor Workshop logo">
-    <span>Metaphor Workshop</span>
-  </button>
+  <button class="brand" data-go="home" aria-label="Back to the start">🎡 Metaphor Workshop</button>
   <div class="stats">
     <span class="pill" id="starCount">⭐ 0</span>
     <span class="pill rank" id="rank">Rookie poet</span>
@@ -168,9 +159,9 @@ footer{text-align:center;padding:1.5rem;font-size:.9rem;opacity:.9}
 
 <nav aria-label="Stations">
   <button data-go="home">🏠 Start</button>
+  <button data-go="common">🧩 Common Ground</button>
   <button data-go="switch">✂️ Cut the “like”</button>
   <button data-go="body">🎡 Body Wheel</button>
-  <button data-go="common">🧩 Common Ground</button>
   <button data-go="ladder">🪜 Level-Up Ladder</button>
   <button data-go="detective">🔎 Detective</button>
   <button data-go="poem">✍️ Poem Builder</button>
@@ -185,7 +176,7 @@ footer{text-align:center;padding:1.5rem;font-size:.9rem;opacity:.9}
     <div>
       <h1>Say it with a metaphor 🎨</h1>
       <p>A simile <em>compares</em>. A metaphor <em>becomes</em>. In this workshop you will spin wheels, hunt for connections and turn the human body into poetry.</p>
-      <div class="row"><button class="btn pink" data-go="switch">Start with the first station</button><button class="btn ghost" id="toolkitBtn2">Open the toolkit</button></div>
+      <div class="row"><button class="btn pink" data-go="common">Start with the first station</button><button class="btn ghost" id="toolkitBtn2">Open the toolkit</button></div>
     </div>
     <div class="demo" aria-live="polite">
       <span class="chip static" id="demoTag">Simile</span>
@@ -197,9 +188,9 @@ footer{text-align:center;padding:1.5rem;font-size:.9rem;opacity:.9}
   <h2>Your path</h2>
   <p class="lead">Follow the stations in order, or jump to the one you need. Every metaphor you save goes into your notebook, and your notebook feeds the final poem.</p>
   <div class="path">
-    <button class="stop c1" data-go="switch"><span class="num">1</span><b>✂️ Cut the “like”</b><span>Turn a simile into a metaphor, then explain it.</span></button>
-    <button class="stop c2" data-go="body"><span class="num">2</span><b>🎡 Body Wheel</b><span>Spin a body part. Invent a metaphor for it.</span></button>
-    <button class="stop c3" data-go="common"><span class="num">3</span><b>🧩 Common Ground</b><span>A body part meets a random object. What do they share?</span></button>
+    <button class="stop c3" data-go="common"><span class="num">1</span><b>🧩 Common Ground</b><span>A body part meets a random object. What do they share?</span></button>
+    <button class="stop c1" data-go="switch"><span class="num">2</span><b>✂️ Cut the “like”</b><span>Turn a simile into a metaphor, then explain it.</span></button>
+    <button class="stop c2" data-go="body"><span class="num">3</span><b>🎡 Body Wheel</b><span>Spin a body part. Invent a metaphor for it.</span></button>
     <button class="stop c4" data-go="ladder"><span class="num">4</span><b>🪜 Level-Up Ladder</b><span>Climb from a plain sentence to an extended metaphor.</span></button>
     <button class="stop c5" data-go="detective"><span class="num">5</span><b>🔎 Detective</b><span>Simile, metaphor or just a fact? Train your eye.</span></button>
     <button class="stop c6" data-go="poem"><span class="num">6</span><b>✍️ Poem Builder</b><span>Zoom in from the whole person to the tiniest detail.</span></button>
