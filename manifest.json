@@ -1,0 +1,17 @@
+{
+  "name": "Metaphor Workshop",
+  "short_name": "Metaphor Workshop",
+  "description": "A creative poetry and metaphor workshop app.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#626262",
+  "theme_color": "#0a0a09",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
