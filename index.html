@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Metaphor Workshop 🎡</title>
+<meta name="theme-color" content="#0a0a09">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Nunito:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#0a0a09; --card:#151514; --chalk:#f1f1e9; --silver:#c3caba; --bg:#626262;
+  --red:#e0364f; --yellow:#f2d64b; --blue:#6ec1ee; --cream:#f3e8a6; --orange:#f08a2c;
+  --display:'Bricolage Grotesque','Trebuchet MS',system-ui,sans-serif;
+  --body:'Nunito','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--chalk);font:400 17px/1.55 var(--body);padding-top:env(safe-area-inset-top,0px)}
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0 0 .4em;letter-spacing:-.01em}
+h1{font-size:clamp(2.3rem,7vw,4.2rem);font-weight:800}
+h2{font-size:clamp(1.7rem,4.5vw,2.5rem);font-weight:800}
+h3{font-size:1.3rem;font-weight:800}
+p{margin:0 0 .8em}
+button,select,textarea,input{font:inherit;color:inherit}
+:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
+
+/* top bar */
+.top{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;justify-content:space-between;padding:.8rem 1.2rem;background:var(--black);color:var(--chalk);border-bottom:3px dashed var(--blue)}
+.brand{font:800 1.35rem var(--display);cursor:pointer;background:none;border:0;color:var(--chalk);padding:0}
+.stats{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.pill{background:var(--yellow);color:var(--black);font-weight:700;border-radius:999px;padding:.2rem .8rem;border:2px solid var(--black)}
+.pill.rank{background:var(--cream)}
+.tool-btn{background:var(--red);color:#fff;border:2px solid var(--chalk);border-radius:999px;padding:.3rem .9rem;font-weight:700;cursor:pointer}
+nav{display:flex;gap:.5rem;overflow-x:auto;padding:.7rem 1.2rem;background:var(--black);position:sticky;top:0;z-index:5;scrollbar-width:thin}
+nav button{flex:0 0 auto;border:2px dashed var(--silver);background:transparent;color:var(--chalk);border-radius:999px;padding:.35rem .9rem;font-weight:700;cursor:pointer;white-space:nowrap}
+nav button[aria-current="true"]{background:var(--yellow);color:var(--black);border:2px solid var(--yellow)}
+main{max-width:1000px;margin:0 auto;padding:1.5rem 1.1rem 3rem}
+
+/* shared */
+.card{background:var(--card);color:var(--chalk);border:3px solid var(--silver);border-radius:22px;box-shadow:6px 6px 0 var(--black);padding:1.2rem 1.3rem;margin:1.2rem 0}
+.lead{font-size:1.15rem;max-width:60ch}
+.row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin:.8rem 0 0}
+.btn{border:3px solid var(--black);background:var(--yellow);color:var(--black);font-weight:800;border-radius:14px;padding:.55rem 1.1rem;cursor:pointer;box-shadow:3px 3px 0 var(--silver);transition:transform .08s,box-shadow .08s}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--silver)}
+.btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--silver)}
+.btn.pink{background:var(--red);color:#fff}
+.btn.teal{background:var(--blue)}
+.btn.ghost{background:var(--chalk)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+textarea,input[type=text],select{width:100%;border:3px solid var(--black);border-radius:12px;padding:.6rem .8rem;background:var(--chalk);color:var(--black)}
+::placeholder{color:#6b6b66;opacity:1}
+textarea{resize:vertical;min-height:4.4rem}
+.fb{min-height:1.6em;font-weight:700;margin:.7rem 0 0}
+.fb.ok{color:#9be8a8}.fb.warn{color:var(--yellow)}.fb.bad{color:#ff8da0}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}
+.chip{border:2px solid var(--black);background:var(--blue);color:var(--black);border-radius:999px;padding:.2rem .8rem;font-weight:700;cursor:pointer}
+.chip.static{cursor:default;background:var(--yellow)}
+.hint{background:#26261d;border:2px dashed var(--yellow);border-radius:14px;padding:.6rem .9rem;margin:.7rem 0}
+.simile{font:800 clamp(1.4rem,4vw,2rem)/1.25 var(--display);margin:.2rem 0 1rem}
+mark{background:var(--red);color:#fff;border-radius:6px;padding:0 .3em}
+.moves{padding-left:1.2rem;max-width:60ch}
+.small{font-size:.92rem;opacity:.88}
+.cap{text-align:center;font-weight:700;color:var(--chalk);margin:.6rem 0 0}
+
+/* home */
+.hero{display:grid;gap:1.5rem;grid-template-columns:1.1fr .9fr;align-items:center;margin-bottom:1rem}
+.hero p{max-width:46ch;font-size:1.15rem}
+.demo{background:var(--black);color:var(--chalk);border-radius:26px;padding:1.4rem;border:3px dashed var(--blue);box-shadow:8px 8px 0 var(--red);min-height:15rem;display:flex;flex-direction:column;justify-content:space-between;gap:1rem}
+.demo-line{font:800 clamp(1.5rem,4vw,2.2rem)/1.2 var(--display);margin:0}
+.demo-line em{font-style:normal;color:var(--yellow)}
+.demo .chip{align-self:flex-start}
+.path{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.3rem;margin-top:1.5rem}
+.stop{all:unset;box-sizing:border-box;cursor:pointer;display:block;border:3px solid var(--black);border-radius:20px;padding:1rem 1.1rem;box-shadow:5px 5px 0 var(--black);transition:transform .12s;color:var(--black)}
+.stop:hover{transform:translateY(-3px) rotate(-.6deg)}
+.stop:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
+.stop b{display:block;font:800 1.25rem var(--display)}
+.stop span{display:block}
+.stop .num{display:inline-block;font:800 .95rem var(--display);background:var(--black);color:var(--chalk);border-radius:999px;padding:0 .6rem;margin-bottom:.4rem}
+.c1{background:var(--yellow)}.c2{background:var(--red);color:#fff}.c3{background:var(--blue)}.c4{background:var(--cream)}.c5{background:var(--orange)}.c6{background:var(--silver)}.c7{background:var(--card);color:var(--chalk);border-color:var(--silver)}
+
+/* wheels */
+.wheel-area{display:grid;grid-template-columns:minmax(260px,420px) 1fr;gap:1.5rem;align-items:start}
+.wheel-wrap{position:relative;width:100%;max-width:420px;margin:0 auto}
+.wheel-wrap canvas{width:100%;height:auto;display:block;cursor:pointer;border-radius:50%}
+.pointer{position:absolute;left:50%;top:-8px;width:0;height:0;transform:translateX(-50%);border-left:16px solid transparent;border-right:16px solid transparent;border-top:34px solid var(--chalk);z-index:2;filter:drop-shadow(0 2px 0 var(--black))}
+.twin{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+.twin .wheel-wrap{max-width:330px}
+.result{font:800 clamp(1.6rem,5vw,2.4rem)/1.1 var(--display);margin:.2rem 0 .4rem;color:var(--yellow)}
+.plus{font:800 1.4rem var(--display);color:var(--red)}
+.three{display:grid;gap:.6rem}
+.three label{font-weight:700;display:block}
+
+/* detective */
+.choices{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-top:1rem}
+.bar{height:14px;border:2px solid var(--silver);border-radius:999px;background:#2a2a29;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--yellow);width:0;transition:width .3s}
+
+/* ladder */
+.rung{border-left:8px solid var(--silver);padding:.3rem 0 .3rem 1rem;margin:1rem 0}
+.rung:nth-child(1){border-color:var(--blue)}.rung:nth-child(2){border-color:var(--yellow)}.rung:nth-child(3){border-color:var(--red)}.rung:nth-child(4){border-color:var(--orange)}
+.rung label{font-weight:800;display:block}
+.rung .ask{margin:.4rem 0 0}
+
+/* poem */
+.poem-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:1.5rem;align-items:start}
+.poem-row{margin-bottom:1rem}
+.poem-row .top2{display:flex;gap:.6rem;align-items:center;margin-bottom:.15rem;flex-wrap:wrap}
+.poem-row select{width:auto;max-width:100%;padding:.2rem .5rem;font-size:.9rem}
+.poem-row .small{margin:0 0 .3rem}
+.step{display:inline-flex;align-items:center;justify-content:center;width:2rem;height:2rem;border-radius:50%;background:var(--black);color:var(--yellow);border:2px solid var(--yellow);font:800 1rem var(--display)}
+.poem-card{background:var(--chalk);color:var(--black);border:3px solid var(--black);border-radius:6px 26px 6px 26px;padding:1.5rem;box-shadow:8px 8px 0 var(--blue);position:sticky;top:5rem}
+.poem-card h3{font-size:1.6rem;margin-bottom:.8rem}
+.poem-card p{font:italic 400 1.15rem/1.5 Georgia,'Times New Roman',serif;margin:0 0 .5rem}
+.poem-card .by{font:700 .95rem var(--body);font-style:normal;margin-top:1rem}
+
+/* notebook */
+.note{display:flex;gap:.8rem;justify-content:space-between;align-items:flex-start;border:3px solid var(--silver);background:var(--card);border-radius:16px;padding:.7rem 1rem;margin:.7rem 0}
+.note p{margin:0;font-weight:700}
+.note small{opacity:.8}
+.note .acts{display:flex;gap:.4rem;flex-shrink:0}
+.mini{border:2px solid var(--black);background:var(--chalk);color:var(--black);border-radius:10px;cursor:pointer;padding:.15rem .6rem;font-weight:700}
+
+/* toolkit dialog */
+dialog{border:4px solid var(--silver);border-radius:24px;max-width:640px;width:calc(100% - 2rem);background:var(--card);color:var(--chalk);padding:1.4rem;box-shadow:10px 10px 0 var(--black)}
+dialog::backdrop{background:rgba(10,10,9,.7)}
+.formula{font:800 1.2rem var(--display);background:var(--yellow);color:var(--black);border:3px solid var(--black);border-radius:14px;padding:.6rem .9rem;margin:.5rem 0}
+
+.toast{position:fixed;left:50%;bottom:1.2rem;transform:translateX(-50%) translateY(150%);background:var(--black);color:var(--chalk);padding:.6rem 1.2rem;border-radius:999px;font-weight:700;transition:transform .25s;z-index:20;border:2px solid var(--yellow)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+footer{text-align:center;padding:1.5rem;font-size:.9rem;opacity:.9}
+
+@media (max-width:760px){
+  .hero,.wheel-area,.poem-grid{grid-template-columns:1fr}
+  .choices{grid-template-columns:1fr}
+  .poem-card{position:static}
+  .twin{grid-template-columns:1fr 1fr;gap:.6rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+@media print{
+  body *{visibility:hidden}
+  #poemCard,#poemCard *{visibility:visible}
+  #poemCard{position:absolute;left:0;top:0;width:100%;box-shadow:none;border:2px solid #000}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <button class="brand" data-go="home" aria-label="Back to the start">🎡 Metaphor Workshop</button>
+  <div class="stats">
+    <span class="pill" id="starCount">⭐ 0</span>
+    <span class="pill rank" id="rank">Rookie poet</span>
+    <button class="tool-btn" id="toolkitBtn">🧰 Poet’s toolkit</button>
+  </div>
+</header>
+
+<nav aria-label="Stations">
+  <button data-go="home">🏠 Start</button>
+  <button data-go="switch">✂️ Cut the “like”</button>
+  <button data-go="body">🎡 Body Wheel</button>
+  <button data-go="common">🧩 Common Ground</button>
+  <button data-go="ladder">🪜 Level-Up Ladder</button>
+  <button data-go="detective">🔎 Detective</button>
+  <button data-go="poem">✍️ Poem Builder</button>
+  <button data-go="notebook">📓 My Notebook</button>
+</nav>
+
+<main>
+
+<!-- HOME -->
+<section id="home" data-section>
+  <div class="hero">
+    <div>
+      <h1>Say it with a metaphor 🎨</h1>
+      <p>A simile <em>compares</em>. A metaphor <em>becomes</em>. In this workshop you will spin wheels, hunt for connections and turn the human body into poetry.</p>
+      <div class="row"><button class="btn pink" data-go="switch">Start with the first station</button><button class="btn ghost" id="toolkitBtn2">Open the toolkit</button></div>
+    </div>
+    <div class="demo" aria-live="polite">
+      <span class="chip static" id="demoTag">Simile</span>
+      <p class="demo-line" id="demoLine"></p>
+      <button class="btn" id="demoBtn">Cut the “like”</button>
+    </div>
+  </div>
+
+  <h2>Your path</h2>
+  <p class="lead">Follow the stations in order, or jump to the one you need. Every metaphor you save goes into your notebook, and your notebook feeds the final poem.</p>
+  <div class="path">
+    <button class="stop c1" data-go="switch"><span class="num">1</span><b>✂️ Cut the “like”</b><span>Turn a simile into a metaphor, then explain it.</span></button>
+    <button class="stop c2" data-go="body"><span class="num">2</span><b>🎡 Body Wheel</b><span>Spin a body part. Invent a metaphor for it.</span></button>
+    <button class="stop c3" data-go="common"><span class="num">3</span><b>🧩 Common Ground</b><span>A body part meets a random object. What do they share?</span></button>
+    <button class="stop c4" data-go="ladder"><span class="num">4</span><b>🪜 Level-Up Ladder</b><span>Climb from a plain sentence to an extended metaphor.</span></button>
+    <button class="stop c5" data-go="detective"><span class="num">5</span><b>🔎 Detective</b><span>Simile, metaphor or just a fact? Train your eye.</span></button>
+    <button class="stop c6" data-go="poem"><span class="num">6</span><b>✍️ Poem Builder</b><span>Zoom in from the whole person to the tiniest detail.</span></button>
+    <button class="stop c7" data-go="notebook"><b>📓 My Notebook</b><span>All your saved metaphors, ready to reuse.</span></button>
+  </div>
+</section>
+
+<!-- SWITCH -->
+<section id="switch" data-section hidden>
+  <h2>✂️ Cut the “like”</h2>
+  <p class="lead">Turn each simile into a metaphor in two moves.</p>
+  <ol class="moves">
+    <li>Cut <b>like</b> or <b>as</b>, so the first thing <i>is</i> the second thing.</li>
+    <li>Explain it. Say where it is, what it does or how it feels.</li>
+  </ol>
+  <div class="card">
+    <p class="small" id="swCount"></p>
+    <p class="simile" id="swSimile"></p>
+    <label for="swInput" class="small">Your metaphor</label>
+    <textarea id="swInput" rows="3" placeholder="Write your metaphor here…"></textarea>
+    <div class="row">
+      <button class="btn pink" id="swCheck">Check it</button>
+      <button class="btn teal" id="swSave">Save to notebook</button>
+      <button class="btn ghost" id="swExample">Show an example</button>
+      <button class="btn ghost" id="swNext">Next sentence</button>
+    </div>
+    <p class="fb" id="swFb" role="status"></p>
+    <p class="hint" id="swEx" hidden></p>
+  </div>
+</section>
+
+<!-- BODY WHEEL -->
+<section id="body" data-section hidden>
+  <h2>🎡 Body Wheel</h2>
+  <p class="lead">Spin the wheel. Whatever body part you get, you must invent a metaphor for it.</p>
+  <div class="wheel-area">
+    <div>
+      <div class="wheel-wrap"><div class="pointer"></div><canvas id="bodyCanvas" width="760" height="760" tabindex="0" role="button" aria-label="Wheel of body parts. Click to spin."></canvas></div>
+      <p class="cap">Click the wheel to spin it</p>
+      <div class="row" style="justify-content:center">
+        <button class="btn pink" id="bodySpin">Spin!</button>
+        <label><input type="checkbox" id="bodyMoodOn"> Add a mood challenge</label>
+      </div>
+    </div>
+    <div class="card" id="bodyOut" hidden>
+      <p class="small">Your body part</p>
+      <p class="result" id="bodyPart"></p>
+      <p id="bodyMood" hidden></p>
+      <p class="small">Need an idea? Tap a spark:</p>
+      <div class="chips" id="bodySparks"></div>
+      <textarea id="bodyInput" rows="3" placeholder="My … is …"></textarea>
+      <div class="row">
+        <button class="btn pink" id="bodyCheck">Check it</button>
+        <button class="btn teal" id="bodySave">Save to notebook</button>
+        <button class="btn ghost" id="bodyBoost">Give me a boost</button>
+      </div>
+      <p class="hint" id="bodyBoostTxt" hidden></p>
+      <p class="fb" id="bodyFb" role="status"></p>
+    </div>
+    <div class="card" id="bodyEmpty">
+      <h3>How it works</h3>
+      <p>1. Spin. 2. Pick a spark or use your own idea. 3. Write <b>My [body part] is…</b> and explain it. 4. Check it and save it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- COMMON GROUND -->
+<section id="common" data-section hidden>
+  <h2>🧩 Common Ground</h2>
+  <p class="lead">Two wheels, two things that seem to have nothing in common. Your job is to find what connects them.</p>
+  <div class="twin">
+    <div><div class="wheel-wrap"><div class="pointer"></div><canvas id="cmBody" width="760" height="760" tabindex="0" role="button" aria-label="Body parts wheel. Click to spin only this wheel."></canvas></div></div>
+    <div><div class="wheel-wrap"><div class="pointer"></div><canvas id="cmObj" width="760" height="760" tabindex="0" role="button" aria-label="Objects wheel. Click to spin only this wheel."></canvas></div></div>
+  </div>
+  <p class="cap" id="cmStatus"></p>
+  <div class="row" style="justify-content:center"><button class="btn pink" id="cmSpin">Spin both!</button></div>
+
+  <div class="card" id="cmOut" hidden>
+    <p class="result"><span id="cmA"></span> <span class="plus">+</span> <span id="cmB"></span></p>
+    <p>Find three things they have in common.</p>
+    <div class="three">
+      <div><label for="cm1">They both <b>look</b>…</label><input type="text" id="cm1" placeholder="shape, colour, size…"></div>
+      <div><label for="cm2">They both <b>do</b>…</label><input type="text" id="cm2" placeholder="what do they do? what are they for?"></div>
+      <div><label for="cm3">They both <b>feel</b>…</label><input type="text" id="cm3" placeholder="warm, heavy, scary, calm…"></div>
+    </div>
+    <p style="margin-top:1rem">Now pick your best connection and write the metaphor.</p>
+    <textarea id="cmInput" rows="3"></textarea>
+    <div class="row">
+      <button class="btn pink" id="cmCheck">Check it</button>
+      <button class="btn teal" id="cmSave">Save to notebook</button>
+      <button class="btn ghost" id="cmHint">I’m stuck</button>
+    </div>
+    <p class="hint" id="cmHintTxt" hidden></p>
+    <p class="fb" id="cmFb" role="status"></p>
+  </div>
+</section>
+
+<!-- LADDER -->
+<section id="ladder" data-section hidden>
+  <h2>🪜 Level-Up Ladder</h2>
+  <p class="lead">Climb four rungs with one body part. Each rung is a little more poetic.</p>
+  <div class="card">
+    <p><b>Example with “hands”</b></p>
+    <ol class="moves">
+      <li>Plain: My hands are cold.</li>
+      <li>Simile: My hands are cold <b>like</b> ice.</li>
+      <li>Metaphor: My hands are ice.</li>
+      <li>Extended: My hands are ice that freezes every handshake.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <div class="row" style="margin-top:0">
+      <label for="ladPart"><b>Your body part:</b></label>
+      <select id="ladPart" style="width:auto"></select>
+      <button class="btn ghost" id="ladRandom">Surprise me</button>
+    </div>
+    <div id="ladRungs"></div>
+    <div class="row">
+      <button class="btn teal" id="ladSave">Save my best metaphor</button>
+    </div>
+    <p class="fb" id="ladFb" role="status"></p>
+  </div>
+</section>
+
+<!-- DETECTIVE -->
+<section id="detective" data-section hidden>
+  <h2>🔎 Detective</h2>
+  <p class="lead">Is it a simile, a metaphor, or just a fact? Be careful: some sentences are tricky.</p>
+  <div class="card">
+    <div class="bar" aria-hidden="true"><i id="dtBar"></i></div>
+    <p class="small" id="dtCount" style="margin-top:.4rem"></p>
+    <p class="simile" id="dtQ"></p>
+    <div class="choices" id="dtChoices">
+      <button class="btn" data-a="simile">Simile</button>
+      <button class="btn pink" data-a="metaphor">Metaphor</button>
+      <button class="btn teal" data-a="literal">Just a fact</button>
+    </div>
+    <p class="fb" id="dtFb" role="status"></p>
+    <div class="row"><button class="btn ghost" id="dtNext" hidden>Next</button></div>
+  </div>
+</section>
+
+<!-- POEM -->
+<section id="poem" data-section hidden>
+  <h2>✍️ Poem Builder</h2>
+  <p class="lead">Describe a person with one metaphor for each step. It can be you, a friend or a character from a story.</p>
+  <p class="lead">Go from general to specific, just like the description ladder from class: start with the whole person and zoom in until you reach the smallest special detail.</p>
+  <div class="poem-grid">
+    <div class="card">
+      <div class="row" style="margin-top:0">
+        <label for="poemSubj"><b>The poem is about:</b></label>
+        <select id="poemSubj" style="width:auto">
+          <option>My</option><option>His</option><option>Her</option><option>Their</option>
+        </select>
+      </div>
+      <label for="poemTitle" class="small">Title</label>
+      <input type="text" id="poemTitle" placeholder="A portrait in metaphors">
+      <div id="poemRows" style="margin-top:1rem"></div>
+      <label for="poemLast" class="small">Last line (how does the poem end?)</label>
+      <input type="text" id="poemLast" placeholder="This is…">
+      <label for="poemBy" class="small" style="display:block;margin-top:.7rem">Poet’s name</label>
+      <input type="text" id="poemBy" placeholder="Your name">
+    </div>
+    <div>
+      <article class="poem-card" id="poemCard" aria-live="polite"></article>
+      <div class="row">
+        <button class="btn teal" id="poemCopy">Copy poem</button>
+        <button class="btn ghost" id="poemPrint">Print</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NOTEBOOK -->
+<section id="notebook" data-section hidden>
+  <h2>📓 My Notebook</h2>
+  <p class="lead">Every metaphor you save lives here. Reuse the best ones in your poem.</p>
+  <div class="row"><label for="nbFilter"><b>Show:</b></label><select id="nbFilter" style="width:auto"></select></div>
+  <div id="nbList"></div>
+</section>
+
+</main>
+
+<footer>Ms Fatigato’s English class · Your work is saved on this device only.</footer>
+
+<dialog id="toolkit">
+  <h2>🧰 Poet’s toolkit</h2>
+  <p><b>The recipe</b></p>
+  <div class="formula">A is B + because…</div>
+  <p class="small">“My heart is a drum <i>that calls every butterfly to dance.</i>”</p>
+  <p><b>Boost your metaphor</b></p>
+  <div class="chips">
+    <span class="chip static">Add a verb: what does it do?</span>
+    <span class="chip static">Add a place: where is it?</span>
+    <span class="chip static">Add a feeling</span>
+    <span class="chip static">Add a sound, smell or touch</span>
+  </div>
+  <p><b>Sparks for each body part</b></p>
+  <div class="chips" id="tkParts"></div>
+  <div class="hint" id="tkSparks">Tap a body part to see ideas.</div>
+  <div class="row"><button class="btn" id="tkClose">Close</button></div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+
+/* ---------- DATA ---------- */
+const BODY=[
+ {n:'face',pl:0,stem:'face',s:['a map','a full moon','a mask','a window','an open book']},
+ {n:'eyes',pl:1,stem:'eye',s:['two lamps','a deep ocean','windows','two marbles','shining stars']},
+ {n:'eyebrows',pl:1,stem:'eyebrow',s:['two caterpillars','dark clouds','bridges','black brushstrokes','tiny roofs']},
+ {n:'nose',pl:0,stem:'nose',s:['a button','a little mountain','a radar','a slide','a ski jump']},
+ {n:'mouth',pl:0,stem:'mouth',s:['a door','a secret box','a river','a zipper','a red bow']},
+ {n:'cheeks',pl:1,stem:'cheek',s:['apples','tomatoes','pillows','two suns','warm bread rolls']},
+ {n:'teeth',pl:1,stem:'(?:tooth|teeth)',s:['pearls','piano keys','a white fence','snow','tiny soldiers']},
+ {n:'skin',pl:0,stem:'skin',s:['velvet','a map','paper','a canvas','armor']},
+ {n:'hair',pl:0,stem:'hair',s:['a river','a waterfall','a bird’s nest','a storm cloud','a silk curtain']},
+ {n:'freckles',pl:1,stem:'freckle',s:['stars','cinnamon sprinkles','constellations','drops of sun','tiny seeds']},
+ {n:'ears',pl:1,stem:'ear',s:['satellite dishes','seashells','open doors','sails','radio antennas']},
+ {n:'shoulders',pl:1,stem:'shoulder',s:['mountains','shelves','coat hangers','wings','a bridge']},
+ {n:'arms',pl:1,stem:'arm',s:['branches','bridges','ropes','wings','two long rivers']},
+ {n:'hands',pl:1,stem:'hand',s:['little birds','two maps','warm mittens','tools','paintbrushes']},
+ {n:'fingers',pl:1,stem:'finger',s:['spiders','piano keys','twigs','little legs','pencils']},
+ {n:'smile',pl:0,stem:'smile',s:['a sunrise','a crescent moon','a bridge','an open door','a zipper']}
+];
+BODY.forEach(b=>b.re=new RegExp('\\b'+b.stem+'s?\\b','i'));
+const byName=n=>BODY.find(b=>b.n===n);
+const detectPart=t=>{const b=BODY.find(b=>b.re.test(t));return b?b.n:'';};
+const OBJECTS=['a clock','a storm','a mirror','a staircase','a candle','a suitcase','a river','a key','a lighthouse','a blanket','a spider web','a volcano','a radio','a garden','a boat','a cloud'];
+const MOODS=['proud','nervous','sleepy','angry','happy','shy','brave','lonely'];
+const BOOSTS=[
+ 'Add a VERB. What does it do? (…that dances, …that never sleeps)',
+ 'Add a PLACE. Where is it? (…in the dark, …on the shore)',
+ 'Add a FEELING. How does it make people feel? (…that warms my soul)',
+ 'Add a SENSE. How does it sound, smell or feel? (…soft as a whisper)',
+ 'Add “for” or “that”: …for my soul, …that carries the sky.'
+];
+const SWITCH=[
+ ['Your smile is white like milk.','Your smile is milk for my soul.'],
+ ['The ocean is blue like the sky.','The ocean is the sky where fish fly.'],
+ ['Her eyes are bright like stars.','Her eyes are two stars that never go to sleep.'],
+ ['His hands are rough like sandpaper.','His hands are sandpaper that polishes every handshake.'],
+ ['My heart beats loud like a drum.','My heart is a drum calling every butterfly to dance.'],
+ ['Her hair is soft like silk.','Her hair is a silk river running down her shoulders.'],
+ ['His voice is deep like thunder.','His voice is thunder rolling inside a quiet room.'],
+ ['Her cheeks are red like apples.','Her cheeks are apples ripening in the cold wind.'],
+ ['His fingers are long like spiders’ legs.','His fingers are spiders dancing over the piano keys.'],
+ ['Her skin is smooth like velvet.','Her skin is velvet that remembers the sun.'],
+ ['His shoulders are as strong as mountains.','His shoulders are mountains that carry the whole sky.'],
+ ['Her teeth are as white as pearls.','Her teeth are a necklace of pearls hidden behind a smile.']
+];
+const QUIZ=[
+ ['Her eyes are lamps in the dark.','metaphor','It says her eyes ARE lamps. There is no “like” or “as”.'],
+ ['Her eyes are very big and brown.','literal','These are real facts about her eyes. There is no comparison.'],
+ ['His voice is like thunder.','simile','“Like” compares his voice to thunder.'],
+ ['My hands are ice.','metaphor','Hands = ice. One thing IS another thing.'],
+ ['He has a long scar on his arm.','literal','Just a fact. No image, no comparison.'],
+ ['Her hair flows like a river.','simile','“Like” is the clue.'],
+ ['Your smile is a sunrise.','metaphor','Smile = sunrise, with no “like”.'],
+ ['Her cheeks are as red as tomatoes.','simile','“as … as” makes a simile.'],
+ ['His heart is a locked door.','metaphor','Heart = locked door. We feel he is closed to other people.'],
+ ['She is as tall as her brother.','literal','Careful! “as … as” is here, but we compare two real heights. It is not an image.'],
+ ['My feet are two tired boats.','metaphor','Feet = boats. And the boats are tired!'],
+ ['She has the same nose as her mother.','literal','Two real noses. It is not an imaginative comparison.'],
+ ['His shoulders are mountains that carry the sky.','metaphor','A metaphor with an explanation: what do the mountains do?'],
+ ['Her laugh sounds like a bell.','simile','“Sounds like” compares the laugh to a bell.']
+];
+const LADDER=[
+ {k:'Plain',h:'Say something true about it.',q:'Is it clear and true?'},
+ {k:'Simile',h:'Compare it with “like” or “as”.',q:'Did I use “like” or “as”?'},
+ {k:'Metaphor',h:'Cut “like” or “as”.',q:'Did I cut “like” or “as”? Does my part now BECOME the thing?'},
+ {k:'Extended',h:'Explain it with a verb, a place or a feeling.',q:'Did I explain my metaphor? Would a friend see the image in their head?'}
+];
+const POEM_STEPS=[
+ {id:'who',label:'Who? Height & build',parts:['shoulders','arms'],hint:'Start wide: who is it, how tall, what kind of build?'},
+ {id:'face',label:'Face',parts:['face','cheeks'],noun:'face',verb:'is',hint:'Zoom in: the shape and the expression of the face.'},
+ {id:'eyes',label:'Eyes & eyebrows',parts:['eyes','eyebrows'],noun:'eyes',verb:'are',hint:'Colour, shape, look. Don’t forget the eyebrows!'},
+ {id:'nose',label:'Nose',parts:['nose'],noun:'nose',verb:'is',hint:'Size and shape of the nose.'},
+ {id:'mouth',label:'Mouth',parts:['mouth','smile','teeth'],noun:'mouth',verb:'is',hint:'Lips, smile, teeth.'},
+ {id:'skin',label:'Skin',parts:['skin'],noun:'skin',verb:'is',hint:'Colour and texture of the skin.'},
+ {id:'hair',label:'Hair',parts:['hair'],noun:'hair',verb:'is',hint:'Colour, length, texture, style.'},
+ {id:'special',label:'Special features',parts:['freckles','ears','hands','fingers'],hint:'The unique detail nobody else has: freckles, a dimple, a scar…'}
+];
+const RANKS=[[0,'Rookie poet'],[5,'Word painter'],[15,'Metaphor maker'],[30,'Master of images']];
+const WHEEL_COLORS=['#e0364f','#f2d64b','#6ec1ee','#f3e8a6','#f08a2c','#c3caba'];
+
+/* ---------- STATE ---------- */
+const KEY='metaphorWorkshop.v1';
+let S={stars:0,notes:[],poem:{title:'',subj:'My',lines:{},last:'',by:''}};
+try{const raw=localStorage.getItem(KEY);if(raw){const d=JSON.parse(raw);S=Object.assign(S,d);S.poem=Object.assign({title:'',subj:'My',lines:{},last:'',by:''},d.poem||{});}}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+let toastT;
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2200);}
+function renderStats(){
+  $('#starCount').textContent='⭐ '+S.stars;
+  let r=RANKS[0][1];RANKS.forEach(x=>{if(S.stars>=x[0])r=x[1];});
+  $('#rank').textContent=r;
+}
+function addStars(n){S.stars+=n;save();renderStats();}
+function saveNote(text,src){
+  text=text.trim();
+  if(!text){toast('Write something first');return false;}
+  if(S.notes.some(n=>n.text.toLowerCase()===text.toLowerCase())){toast('Already in your notebook');return false;}
+  S.notes.unshift({id:Date.now()+Math.random(),text,part:detectPart(text),src});
+  S.stars+=1;save();renderStats();toast('Saved! ⭐ +1');return true;
+}
+
+/* ---------- SHARED CHECK ---------- */
+function checkMetaphor(text,minWords){
+  const t=text.trim();
+  if(!t)return{lv:'bad',msg:'Write your sentence first.'};
+  if(/\b(like|as)\b/i.test(t))return{lv:'warn',msg:'I still see “like” or “as”. That is a simile! Cut it and say it IS the thing.'};
+  if(t.split(/\s+/).length<(minWords||7))return{lv:'warn',msg:'Good, that is a metaphor! Now explain it: where is it? What does it do? How does it feel?',ok:true};
+  return{lv:'ok',msg:'Yes! A metaphor with an explanation. Save it! 🎉',ok:true,great:true};
+}
+function showFb(el,r){el.className='fb '+r.lv;el.textContent=r.msg;}
+
+/* ---------- ROUTER ---------- */
+const sections=$$('[data-section]');
+function go(id){
+  if(!sections.some(s=>s.id===id))id='home';
+  sections.forEach(s=>s.hidden=s.id!==id);
+  $$('nav button').forEach(b=>b.setAttribute('aria-current',String(b.dataset.go===id)));
+  if(id==='notebook')renderNotes();
+  if(id==='poem')buildPoem();
+  if(id==='body')bodyWheel.draw();
+  if(id==='common'){cmBodyWheel.draw();cmObjWheel.draw();}
+  if(id==='detective'&&!dt.started)dtStart();
+  try{history.replaceState(null,'','#'+id);}catch(e){}
+  window.scrollTo({top:0,behavior:reduced?'auto':'smooth'});
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)go(b.dataset.go);});
+
+/* ---------- HOME DEMO ---------- */
+const DEMOS=[
+ [['Your smile is white <mark>like</mark> milk.','Simile'],['Your smile is milk.','Metaphor, but short'],['Your smile is milk <em>for my soul.</em>','Metaphor + explanation']],
+ [['The ocean is blue <mark>like</mark> the sky.','Simile'],['The ocean is the sky.','Metaphor, but short'],['The ocean is the sky <em>where fish fly.</em>','Metaphor + explanation']]
+];
+let dm=0,ds=0;
+const BTN=['Cut the “like”','Explain it better','Try another one'];
+function renderDemo(){$('#demoLine').innerHTML=DEMOS[dm][ds][0];$('#demoTag').textContent=DEMOS[dm][ds][1];$('#demoBtn').textContent=BTN[ds];}
+$('#demoBtn').addEventListener('click',()=>{ds++;if(ds>2){ds=0;dm=(dm+1)%DEMOS.length;}renderDemo();});
+renderDemo();
+
+/* ---------- WHEEL ---------- */
+function makeWheel(canvas,items){
+  const ctx=canvas.getContext('2d'),W=canvas.width,C=W/2,R=C-14,TAU=Math.PI*2;
+  let rot=Math.random()*TAU,busy=false;
+  function draw(){
+    const seg=TAU/items.length;
+    ctx.clearRect(0,0,W,W);ctx.save();ctx.translate(C,C);
+    items.forEach((label,i)=>{
+      const a0=rot+i*seg,a1=a0+seg;
+      ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,R,a0,a1);ctx.closePath();
+      ctx.fillStyle=WHEEL_COLORS[i%WHEEL_COLORS.length];ctx.fill();
+      ctx.lineWidth=6;ctx.strokeStyle='#0a0a09';ctx.stroke();
+      ctx.save();ctx.rotate(a0+seg/2);ctx.textAlign='right';ctx.textBaseline='middle';
+      ctx.fillStyle='#0a0a09';ctx.font='800 34px "Bricolage Grotesque","Trebuchet MS",sans-serif';
+      ctx.fillText(label,R-30,0,R*0.62);ctx.restore();
+    });
+    ctx.beginPath();ctx.arc(0,0,44,0,TAU);ctx.fillStyle='#f1f1e9';ctx.fill();ctx.lineWidth=6;ctx.stroke();
+    ctx.restore();
+  }
+  function indexAt(){const seg=TAU/items.length;const p=(((-Math.PI/2-rot)%TAU)+TAU)%TAU;return Math.floor(p/seg)%items.length;}
+  function spin(){
+    return new Promise(res=>{
+      if(busy)return;busy=true;
+      const start=rot,end=rot+(5+Math.random()*3)*TAU,dur=reduced?700:4200,t0=performance.now();
+      (function step(now){
+        const t=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-t,3);
+        rot=start+(end-start)*e;draw();
+        if(t<1)requestAnimationFrame(step);else{rot=rot%TAU;busy=false;draw();res(indexAt());}
+      })(t0);
+    });
+  }
+  draw();
+  return{spin,draw,get busy(){return busy;}};
+}
+function wheelClick(canvas,fn){
+  canvas.addEventListener('click',fn);
+  canvas.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fn();}});
+}
+const bodyWheel=makeWheel($('#bodyCanvas'),BODY.map(b=>b.n));
+const cmBodyWheel=makeWheel($('#cmBody'),BODY.map(b=>b.n));
+const cmObjWheel=makeWheel($('#cmObj'),OBJECTS);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{bodyWheel.draw();cmBodyWheel.draw();cmObjWheel.draw();});
+
+/* ---------- STATION 1: SWITCH ---------- */
+let swOrder=shuffle(SWITCH.map((_,i)=>i)),swPos=0,swOk=false;
+function swRender(){
+  const it=SWITCH[swOrder[swPos]];
+  $('#swCount').textContent='Sentence '+(swPos+1)+' of '+SWITCH.length;
+  $('#swSimile').innerHTML=it[0].replace(/\b(like|as)\b/gi,'<mark>$1</mark>');
+  $('#swInput').value='';$('#swFb').textContent='';$('#swEx').hidden=true;swOk=false;
+}
+$('#swCheck').addEventListener('click',()=>{const r=checkMetaphor($('#swInput').value,7);swOk=!!r.ok;showFb($('#swFb'),r);});
+$('#swSave').addEventListener('click',()=>{const r=checkMetaphor($('#swInput').value,7);showFb($('#swFb'),r);if(r.ok)saveNote($('#swInput').value,'cut');});
+$('#swExample').addEventListener('click',()=>{const e=$('#swEx');e.textContent='Example: '+SWITCH[swOrder[swPos]][1];e.hidden=false;});
+$('#swNext').addEventListener('click',()=>{swPos=(swPos+1)%SWITCH.length;if(swPos===0)swOrder=shuffle(swOrder);swRender();});
+swRender();
+
+/* ---------- STATION 2: BODY WHEEL ---------- */
+let bodyCur=null;
+async function bodySpinNow(){
+  if(bodyWheel.busy)return;
+  $('#bodySpin').disabled=true;
+  const i=await bodyWheel.spin();
+  $('#bodySpin').disabled=false;
+  bodyCur=BODY[i];
+  $('#bodyEmpty').hidden=true;$('#bodyOut').hidden=false;
+  $('#bodyPart').textContent=bodyCur.n;
+  const m=$('#bodyMood');
+  if($('#bodyMoodOn').checked){m.hidden=false;m.innerHTML='Mood challenge: make it feel <b>'+pick(MOODS)+'</b>.';}else m.hidden=true;
+  const sp=$('#bodySparks');sp.innerHTML='';
+  bodyCur.s.forEach(s=>{
+    const c=document.createElement('button');c.className='chip';c.type='button';c.textContent=s;
+    c.addEventListener('click',()=>{$('#bodyInput').value='My '+bodyCur.n+' '+(bodyCur.pl?'are':'is')+' '+s+' that ';$('#bodyInput').focus();});
+    sp.appendChild(c);
+  });
+  $('#bodyInput').value='';$('#bodyFb').textContent='';$('#bodyBoostTxt').hidden=true;
+}
+$('#bodySpin').addEventListener('click',bodySpinNow);
+wheelClick($('#bodyCanvas'),bodySpinNow);
+$('#bodyCheck').addEventListener('click',()=>showFb($('#bodyFb'),checkMetaphor($('#bodyInput').value,7)));
+$('#bodySave').addEventListener('click',()=>{const r=checkMetaphor($('#bodyInput').value,7);showFb($('#bodyFb'),r);if(r.ok)saveNote($('#bodyInput').value,'wheel');});
+$('#bodyBoost').addEventListener('click',()=>{const e=$('#bodyBoostTxt');e.textContent=pick(BOOSTS);e.hidden=false;});
+
+/* ---------- STATION 3: COMMON GROUND ---------- */
+let cmA=null,cmB=null;
+function cmUpdate(){
+  const st=$('#cmStatus');
+  if(cmA&&cmB){
+    $('#cmOut').hidden=false;
+    $('#cmA').textContent=cmA.n;$('#cmB').textContent=cmB;
+    ['#cm1','#cm2','#cm3','#cmInput'].forEach(s=>$(s).value='');
+    $('#cmInput').placeholder='My '+cmA.n+' '+(cmA.pl?'are':'is')+' '+cmB+' that…';
+    $('#cmFb').textContent='';$('#cmHintTxt').hidden=true;
+    st.textContent='Click a wheel to spin only that one, or spin both again.';
+  }else{
+    $('#cmOut').hidden=true;
+    st.textContent=cmA?'You got “'+cmA.n+'”. Now click the objects wheel!':cmB?'You got “'+cmB+'”. Now click the body wheel!':'Click a wheel to spin it, or spin both.';
+  }
+}
+async function cmSpin(which){
+  if(cmBodyWheel.busy||cmObjWheel.busy)return;
+  $('#cmSpin').disabled=true;
+  if(which==='body'){cmA=BODY[await cmBodyWheel.spin()];}
+  else if(which==='obj'){cmB=OBJECTS[await cmObjWheel.spin()];}
+  else{const [i,j]=await Promise.all([cmBodyWheel.spin(),cmObjWheel.spin()]);cmA=BODY[i];cmB=OBJECTS[j];}
+  $('#cmSpin').disabled=false;
+  cmUpdate();
+}
+$('#cmSpin').addEventListener('click',()=>cmSpin('both'));
+wheelClick($('#cmBody'),()=>cmSpin('body'));
+wheelClick($('#cmObj'),()=>cmSpin('obj'));
+cmUpdate();
+$('#cmCheck').addEventListener('click',()=>showFb($('#cmFb'),checkMetaphor($('#cmInput').value,7)));
+$('#cmSave').addEventListener('click',()=>{const r=checkMetaphor($('#cmInput').value,7);showFb($('#cmFb'),r);if(r.ok)saveNote($('#cmInput').value,'common');});
+$('#cmHint').addEventListener('click',()=>{
+  if(!cmA||!cmB)return;
+  const q=[
+   'What does '+cmB+' DO? What do '+cmA.n+' DO?',
+   'Close your eyes. What SHAPE or COLOUR is '+cmB+'? Does it look like the '+cmA.n+'?',
+   'How do you FEEL when you see '+cmB+'? When do you feel it in your face or body?',
+   'Imagine '+cmB+' is inside the '+cmA.n+'. What is it doing there?'
+  ];
+  const e=$('#cmHintTxt');e.textContent=pick(q);e.hidden=false;
+});
+
+/* ---------- STATION 4: LADDER ---------- */
+const ladPart=$('#ladPart');
+BODY.forEach(b=>{const o=document.createElement('option');o.value=b.n;o.textContent=b.n;ladPart.appendChild(o);});
+const ladBox=$('#ladRungs');
+LADDER.forEach((r,i)=>{
+  const d=document.createElement('div');d.className='rung';
+  d.innerHTML='<label for="lad'+i+'">Rung '+(i+1)+': '+r.k+'</label><p class="small">'+r.h+'</p>'+
+   '<textarea id="lad'+i+'" rows="2"></textarea><p class="small ask">Ask yourself: '+r.q+'</p>';
+  ladBox.appendChild(d);
+});
+function ladReset(){
+  const b=byName(ladPart.value),v=b.pl?'are':'is';
+  const ph=['My '+b.n+' '+v+'…','My '+b.n+' '+v+' … like …','My '+b.n+' '+v+' …','My '+b.n+' '+v+' … that …'];
+  for(let i=0;i<4;i++){$('#lad'+i).value='';$('#lad'+i).placeholder=ph[i];}
+  $('#ladFb').textContent='';
+}
+ladPart.addEventListener('change',ladReset);
+$('#ladRandom').addEventListener('click',()=>{ladPart.value=pick(BODY).n;ladReset();});
+$('#ladSave').addEventListener('click',()=>{
+  const fb=$('#ladFb'),t3=$('#lad3').value.trim(),t2=$('#lad2').value.trim();
+  if(t3){saveNote(t3,'ladder');fb.textContent='';}
+  else if(t2){saveNote(t2,'ladder');fb.className='fb warn';fb.textContent='Saved your rung 3. Can you climb to rung 4?';}
+  else{fb.className='fb bad';fb.textContent='Write your metaphor in rung 3 or 4 first.';}
+});
+ladReset();
+
+/* ---------- STATION 5: DETECTIVE ---------- */
+const dt={started:false,q:[],i:0,score:0,done:false};
+function dtStart(){dt.started=true;dt.q=shuffle(QUIZ).slice(0,8);dt.i=0;dt.score=0;dt.done=false;dtRender();}
+function dtRender(){
+  $('#dtChoices').hidden=false;$('#dtNext').hidden=true;$('#dtFb').textContent='';$('#dtFb').className='fb';
+  $('#dtBar').style.width=(dt.i/dt.q.length*100)+'%';
+  $('#dtCount').textContent='Question '+(dt.i+1)+' of '+dt.q.length;
+  $('#dtQ').textContent='“'+dt.q[dt.i][0]+'”';
+  $$('#dtChoices button').forEach(b=>b.disabled=false);
+}
+$('#dtChoices').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b||b.disabled)return;
+  const q=dt.q[dt.i],right=b.dataset.a===q[1];
+  $$('#dtChoices button').forEach(x=>x.disabled=true);
+  if(right)dt.score++;
+  const fb=$('#dtFb');fb.className='fb '+(right?'ok':'bad');
+  fb.textContent=(right?'Correct! ':'Not quite. It is a '+(q[1]==='literal'?'plain fact':q[1])+'. ')+q[2];
+  const nx=$('#dtNext');nx.hidden=false;nx.textContent=dt.i===dt.q.length-1?'See my score':'Next';
+});
+$('#dtNext').addEventListener('click',()=>{
+  if(dt.done){dtStart();return;}
+  if(dt.i<dt.q.length-1){dt.i++;dtRender();return;}
+  dt.done=true;addStars(dt.score>=6?2:1);
+  $('#dtBar').style.width='100%';$('#dtChoices').hidden=true;
+  $('#dtCount').textContent='Finished!';
+  $('#dtQ').textContent='You found '+dt.score+' out of '+dt.q.length+'. '+(dt.score>=6?'Great eye, detective! 🕵️':'Keep training, you are getting closer!');
+  $('#dtFb').textContent='';$('#dtNext').textContent='Play again';
+});
+
+/* ---------- STATION 6: POEM ---------- */
+const WHO={My:'I am…',His:'He is…',Her:'She is…',Their:'They are…'};
+function stepPh(st,subj){
+  if(st.id==='who')return WHO[subj]+' (height and build)';
+  if(st.id==='special')return subj+' freckles / dimples / scar… (choose one)';
+  return subj+' '+st.noun+' '+st.verb+'…';
+}
+function buildPoem(){
+  const subj=S.poem.subj;$('#poemSubj').value=subj;
+  $('#poemTitle').value=S.poem.title;$('#poemLast').value=S.poem.last;$('#poemBy').value=S.poem.by;
+  const box=$('#poemRows');box.innerHTML='';
+  POEM_STEPS.forEach((st,idx)=>{
+    const row=document.createElement('div');row.className='poem-row';
+    const mine=S.notes.filter(n=>st.parts.includes(n.part)),others=S.notes.filter(n=>!st.parts.includes(n.part));
+    const sel=document.createElement('select');sel.setAttribute('aria-label','Pick a metaphor from my notebook for '+st.label);
+    sel.innerHTML='<option value="">From my notebook…</option>';
+    const og=(label,arr)=>{if(!arr.length)return;const g=document.createElement('optgroup');g.label=label;arr.forEach(n=>{const o=document.createElement('option');o.value=n.id;o.textContent=n.text.length>60?n.text.slice(0,58)+'…':n.text;g.appendChild(o);});sel.appendChild(g);};
+    og('Matching this step',mine);og('Other metaphors',others);
+    const num=document.createElement('span');num.className='step';num.textContent=idx+1;
+    const lab=document.createElement('label');lab.className='chip static';lab.textContent=st.label;lab.htmlFor='pl-'+st.id;
+    const hint=document.createElement('p');hint.className='small';hint.textContent=st.hint;
+    const ta=document.createElement('textarea');ta.id='pl-'+st.id;ta.rows=2;ta.value=S.poem.lines[st.id]||'';
+    ta.placeholder=stepPh(st,subj);
+    ta.addEventListener('input',()=>{S.poem.lines[st.id]=ta.value;save();renderPoem();});
+    sel.addEventListener('change',()=>{const n=S.notes.find(x=>String(x.id)===sel.value);if(n){ta.value=n.text;S.poem.lines[st.id]=n.text;save();renderPoem();}sel.value='';});
+    const top=document.createElement('div');top.className='top2';top.appendChild(num);top.appendChild(lab);top.appendChild(sel);
+    row.appendChild(top);row.appendChild(hint);row.appendChild(ta);box.appendChild(row);
+  });
+  renderPoem();
+}
+function poemText(){
+  const L=[];
+  POEM_STEPS.forEach(st=>{const t=(S.poem.lines[st.id]||'').trim();if(t)L.push(t);});
+  if(S.poem.last.trim())L.push(S.poem.last.trim());
+  return L;
+}
+function renderPoem(){
+  const card=$('#poemCard'),lines=poemText();
+  card.innerHTML='';
+  const h=document.createElement('h3');h.textContent=S.poem.title.trim()||'A portrait in metaphors';card.appendChild(h);
+  if(!lines.length){const p=document.createElement('p');p.textContent='Your poem will appear here, line by line.';p.style.opacity='.6';card.appendChild(p);}
+  lines.forEach(t=>{const p=document.createElement('p');p.textContent=t;card.appendChild(p);});
+  if(S.poem.by.trim()){const b=document.createElement('p');b.className='by';b.textContent='by '+S.poem.by.trim();card.appendChild(b);}
+}
+$('#poemSubj').addEventListener('change',e=>{S.poem.subj=e.target.value;save();buildPoem();});
+$('#poemTitle').addEventListener('input',e=>{S.poem.title=e.target.value;save();renderPoem();});
+$('#poemLast').addEventListener('input',e=>{S.poem.last=e.target.value;save();renderPoem();});
+$('#poemBy').addEventListener('input',e=>{S.poem.by=e.target.value;save();renderPoem();});
+$('#poemCopy').addEventListener('click',()=>{
+  const lines=poemText();if(!lines.length){toast('Write at least one line');return;}
+  const txt=(S.poem.title.trim()||'A portrait in metaphors')+'\n\n'+lines.join('\n')+(S.poem.by.trim()?'\n\nby '+S.poem.by.trim():'');
+  const done=()=>{toast('Poem copied! 📋');if(lines.length>=4)addStars(1);};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(done,()=>toast('Could not copy'));
+  else{const t=document.createElement('textarea');t.value=txt;document.body.appendChild(t);t.select();try{document.execCommand('copy');done();}catch(e){toast('Could not copy');}t.remove();}
+});
+$('#poemPrint').addEventListener('click',()=>window.print());
+
+/* ---------- NOTEBOOK ---------- */
+const SRC={cut:'Cut the “like”',wheel:'Body Wheel',common:'Common Ground',ladder:'Ladder'};
+function renderNotes(){
+  const f=$('#nbFilter'),cur=f.value||'all';
+  const parts=[...new Set(S.notes.map(n=>n.part).filter(Boolean))];
+  f.innerHTML='<option value="all">All metaphors ('+S.notes.length+')</option>'+parts.map(p=>'<option value="'+p+'">'+p+'</option>').join('');
+  f.value=parts.includes(cur)?cur:'all';
+  const list=$('#nbList');list.innerHTML='';
+  const arr=S.notes.filter(n=>f.value==='all'||n.part===f.value);
+  if(!arr.length){
+    const d=document.createElement('div');d.className='card';
+    d.innerHTML='<h3>Nothing here yet</h3><p>Save a metaphor from any station and it will appear in this notebook.</p>';
+    const b=document.createElement('button');b.className='btn pink';b.textContent='Go to Body Wheel';b.dataset.go='body';d.appendChild(b);list.appendChild(d);return;
+  }
+  arr.forEach(n=>{
+    const d=document.createElement('div');d.className='note';
+    const left=document.createElement('div');
+    const p=document.createElement('p');p.textContent=n.text;
+    const s=document.createElement('small');s.textContent=(n.part?n.part+' · ':'')+(SRC[n.src]||'');
+    left.appendChild(p);left.appendChild(s);
+    const acts=document.createElement('div');acts.className='acts';
+    const cp=document.createElement('button');cp.className='mini';cp.textContent='Copy';
+    cp.addEventListener('click',()=>{if(navigator.clipboard)navigator.clipboard.writeText(n.text).then(()=>toast('Copied'),()=>{});});
+    const del=document.createElement('button');del.className='mini';del.textContent='Delete';del.setAttribute('aria-label','Delete this metaphor');
+    del.addEventListener('click',()=>{S.notes=S.notes.filter(x=>x.id!==n.id);save();renderNotes();});
+    acts.appendChild(cp);acts.appendChild(del);d.appendChild(left);d.appendChild(acts);list.appendChild(d);
+  });
+}
+$('#nbFilter').addEventListener('change',renderNotes);
+
+/* ---------- TOOLKIT ---------- */
+const tk=$('#toolkit');
+const tkParts=$('#tkParts');
+BODY.forEach(b=>{const c=document.createElement('button');c.className='chip';c.type='button';c.textContent=b.n;
+  c.addEventListener('click',()=>{$('#tkSparks').textContent='';const s=document.createElement('b');s.textContent='My '+b.n+' '+(b.pl?'are':'is')+'…  ';$('#tkSparks').appendChild(s);$('#tkSparks').appendChild(document.createTextNode(b.s.join(' · ')));});
+  tkParts.appendChild(c);});
+const openTk=()=>{if(tk.showModal)tk.showModal();else tk.setAttribute('open','');};
+$('#toolkitBtn').addEventListener('click',openTk);
+$('#toolkitBtn2').addEventListener('click',openTk);
+$('#tkClose').addEventListener('click',()=>tk.close?tk.close():tk.removeAttribute('open'));
+tk.addEventListener('click',e=>{if(e.target===tk&&tk.close)tk.close();});
+
+/* ---------- INIT ---------- */
+renderStats();
+go((location.hash||'#home').slice(1));
+window.scrollTo(0,0);
+})();
+</script>
+</body>
+</html>
