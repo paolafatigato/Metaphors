@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Metaphor Workshop 🎡</title>
 <meta name="theme-color" content="#0a0a09">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Metaphor Workshop">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Nunito:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -29,7 +34,8 @@ button,select,textarea,input{font:inherit;color:inherit}
 
 /* top bar */
 .top{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;justify-content:space-between;padding:.8rem 1.2rem;background:var(--black);color:var(--chalk);border-bottom:3px dashed var(--blue)}
-.brand{font:800 1.35rem var(--display);cursor:pointer;background:none;border:0;color:var(--chalk);padding:0}
+.brand{font:800 1.35rem var(--display);cursor:pointer;background:none;border:0;color:var(--chalk);padding:0;display:inline-flex;align-items:center;gap:.5rem}
+.logo{width:34px;height:34px;object-fit:contain;border-radius:8px}
 .stats{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
 .pill{background:var(--yellow);color:var(--black);font-weight:700;border-radius:999px;padding:.2rem .8rem;border:2px solid var(--black)}
 .pill.rank{background:var(--cream)}
@@ -58,6 +64,9 @@ textarea{resize:vertical;min-height:4.4rem}
 .chips{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}
 .chip{border:2px solid var(--black);background:var(--blue);color:var(--black);border-radius:999px;padding:.2rem .8rem;font-weight:700;cursor:pointer}
 .chip.static{cursor:default;background:var(--yellow)}
+.chip.on{background:var(--yellow);box-shadow:0 0 0 3px var(--chalk)}
+.line{font:800 1.15rem/1.3 var(--display);margin:.5rem 0}
+.stage{border-top:2px dashed var(--silver);margin-top:1rem;padding-top:.8rem}
 .hint{background:#26261d;border:2px dashed var(--yellow);border-radius:14px;padding:.6rem .9rem;margin:.7rem 0}
 .simile{font:800 clamp(1.4rem,4vw,2rem)/1.25 var(--display);margin:.2rem 0 1rem}
 mark{background:var(--red);color:#fff;border-radius:6px;padding:0 .3em}
@@ -95,6 +104,8 @@ mark{background:var(--red);color:#fff;border-radius:6px;padding:0 .3em}
 
 /* detective */
 .choices{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-top:1rem}
+.choices.four{grid-template-columns:repeat(2,1fr)}
+.tabs{display:flex;gap:.6rem;flex-wrap:wrap;margin:1rem 0 0}
 .bar{height:14px;border:2px solid var(--silver);border-radius:999px;background:#2a2a29;overflow:hidden}
 .bar i{display:block;height:100%;background:var(--yellow);width:0;transition:width .3s}
 
@@ -134,7 +145,7 @@ footer{text-align:center;padding:1.5rem;font-size:.9rem;opacity:.9}
 
 @media (max-width:760px){
   .hero,.wheel-area,.poem-grid{grid-template-columns:1fr}
-  .choices{grid-template-columns:1fr}
+  .choices,.choices.four{grid-template-columns:1fr}
   .poem-card{position:static}
   .twin{grid-template-columns:1fr 1fr;gap:.6rem}
 }
@@ -149,7 +160,7 @@ footer{text-align:center;padding:1.5rem;font-size:.9rem;opacity:.9}
 <body>
 
 <header class="top">
-  <button class="brand" data-go="home" aria-label="Back to the start">🎡 Metaphor Workshop</button>
+  <button class="brand" data-go="home" aria-label="Back to the start"><img class="logo" src="logo.png" alt="" width="34" height="34" onerror="this.replaceWith('🎡')"> Metaphor Workshop</button>
   <div class="stats">
     <span class="pill" id="starCount">⭐ 0</span>
     <span class="pill rank" id="rank">Rookie poet</span>
@@ -161,7 +172,9 @@ footer{text-align:center;padding:1.5rem;font-size:.9rem;opacity:.9}
   <button data-go="home">🏠 Start</button>
   <button data-go="common">🧩 Common Ground</button>
   <button data-go="switch">✂️ Cut the “like”</button>
+  <button data-go="machine">⚙️ Machine</button>
   <button data-go="body">🎡 Body Wheel</button>
+  <button data-go="enrich">🔍 Enrich</button>
   <button data-go="ladder">🪜 Level-Up Ladder</button>
   <button data-go="detective">🔎 Detective</button>
   <button data-go="poem">✍️ Poem Builder</button>
@@ -190,10 +203,12 @@ footer{text-align:center;padding:1.5rem;font-size:.9rem;opacity:.9}
   <div class="path">
     <button class="stop c3" data-go="common"><span class="num">1</span><b>🧩 Common Ground</b><span>A body part meets a random object. What do they share?</span></button>
     <button class="stop c1" data-go="switch"><span class="num">2</span><b>✂️ Cut the “like”</b><span>Turn a simile into a metaphor, then explain it.</span></button>
-    <button class="stop c2" data-go="body"><span class="num">3</span><b>🎡 Body Wheel</b><span>Spin a body part. Invent a metaphor for it.</span></button>
-    <button class="stop c4" data-go="ladder"><span class="num">4</span><b>🪜 Level-Up Ladder</b><span>Climb from a plain sentence to an extended metaphor.</span></button>
-    <button class="stop c5" data-go="detective"><span class="num">5</span><b>🔎 Detective</b><span>Simile, metaphor or just a fact? Train your eye.</span></button>
-    <button class="stop c6" data-go="poem"><span class="num">6</span><b>✍️ Poem Builder</b><span>Zoom in from the whole person to the tiniest detail.</span></button>
+    <button class="stop c4" data-go="machine"><span class="num">3</span><b>⚙️ Metaphor Machine</b><span>From a fact to an image to a finished metaphor.</span></button>
+    <button class="stop c2" data-go="body"><span class="num">4</span><b>🎡 Body Wheel</b><span>Spin a body part. Invent a metaphor for it.</span></button>
+    <button class="stop c5" data-go="enrich"><span class="num">5</span><b>🔍 Enrich the Metaphor</b><span>Spot what makes a metaphor richer, then add it yourself.</span></button>
+    <button class="stop c6" data-go="ladder"><span class="num">6</span><b>🪜 Level-Up Ladder</b><span>Climb from a plain sentence to an extended metaphor.</span></button>
+    <button class="stop c3" data-go="detective"><span class="num">7</span><b>🔎 Detective</b><span>Simile, metaphor or just a fact? Train your eye.</span></button>
+    <button class="stop c1" data-go="poem"><span class="num">8</span><b>✍️ Poem Builder</b><span>Zoom in from the whole person to the tiniest detail.</span></button>
     <button class="stop c7" data-go="notebook"><b>📓 My Notebook</b><span>All your saved metaphors, ready to reuse.</span></button>
   </div>
 </section>
@@ -219,6 +234,36 @@ footer{text-align:center;padding:1.5rem;font-size:.9rem;opacity:.9}
     </div>
     <p class="fb" id="swFb" role="status"></p>
     <p class="hint" id="swEx" hidden></p>
+  </div>
+</section>
+
+<!-- MACHINE -->
+<section id="machine" data-section hidden>
+  <h2>⚙️ Metaphor Machine</h2>
+  <p class="lead">Start with the facts, then find an image, then explain it. Spin a body part and build your metaphor in four steps.</p>
+  <div class="wheel-area">
+    <div>
+      <div class="wheel-wrap"><div class="pointer"></div><canvas id="mmCanvas" width="760" height="760" tabindex="0" role="button" aria-label="Wheel of body parts. Click to spin."></canvas></div>
+      <p class="cap">Click the wheel to spin it</p>
+    </div>
+    <div class="card" id="mmEmpty">
+      <h3>How it works</h3>
+      <p>1. Spin. 2. Choose a <b>fact</b> (what is it like?). 3. Choose an <b>image</b> (what does it remind you of?). 4. Choose an <b>explanation</b> to finish the metaphor. You can change the sentence before saving it.</p>
+    </div>
+    <div class="card" id="mmOut" hidden>
+      <p class="small">Your body part</p>
+      <p class="result" id="mmPart"></p>
+      <div class="row" style="margin-top:0"><label for="mmSubj"><b>It is about:</b></label>
+        <select id="mmSubj" style="width:auto"><option>Her</option><option>His</option><option>My</option><option>Their</option></select></div>
+      <div class="stage"><h3>1 · Fact</h3><p class="small">Which word describes it?</p><div class="chips" id="mmFacts"></div></div>
+      <div class="stage" id="mmS2" hidden><h3>2 · Image</h3><p class="small">What does it remind you of?</p><div class="chips" id="mmImgs"></div>
+        <p class="line" id="mmSimile"></p><p class="line" id="mmCut"></p></div>
+      <div class="stage" id="mmS3" hidden><h3>3 · Explanation</h3><p class="small">Finish your metaphor with one of these, or write your own below.</p><div class="chips" id="mmFins"></div>
+        <button class="btn ghost" type="button" id="mmRandom">🎲 Surprise me</button></div>
+      <div class="stage" id="mmS4" hidden><h3>4 · Your metaphor</h3>
+        <textarea id="mmInput" rows="3"></textarea>
+        <div class="row"><button class="btn teal" id="mmSave">Save to notebook</button></div></div>
+    </div>
   </div>
 </section>
 
@@ -285,6 +330,56 @@ footer{text-align:center;padding:1.5rem;font-size:.9rem;opacity:.9}
     </div>
     <p class="hint" id="cmHintTxt" hidden></p>
     <p class="fb" id="cmFb" role="status"></p>
+  </div>
+</section>
+
+<!-- ENRICH -->
+<section id="enrich" data-section hidden>
+  <h2>🔍 Enrich the Metaphor</h2>
+  <p class="lead">A short metaphor is good. A metaphor with an explanation is better. First learn to see what makes it richer, then do it yourself.</p>
+  <div class="tabs">
+    <button class="btn" id="enTabA">A · Spot the difference</button>
+    <button class="btn ghost" id="enTabB">B · Add the explanation</button>
+  </div>
+
+  <div class="card" id="enA">
+    <div id="enAWrap">
+      <p class="small" id="enACount"></p>
+      <p class="small"><b>Version 1</b></p>
+      <p class="simile" id="enA1"></p>
+      <p class="small"><b>Version 2</b></p>
+      <p class="simile" id="enA2"></p>
+      <p><b>What did the writer add in version 2?</b></p>
+      <div class="choices four" id="enAChoices">
+        <button class="btn" data-a="action">An action (what it does)</button>
+        <button class="btn pink" data-a="place">A place or a time (where, when)</button>
+        <button class="btn teal" data-a="feeling">A feeling (how it makes us feel)</button>
+        <button class="btn ghost" data-a="sense">Sense words (look, sound, touch)</button>
+      </div>
+      <p class="fb" id="enAFb" role="status"></p>
+      <div class="row"><button class="btn ghost" id="enANext" hidden>Next</button></div>
+    </div>
+    <div id="enAEnd" hidden>
+      <p class="simile" id="enAEndTxt"></p>
+      <button class="btn pink" id="enAAgain">Play again</button>
+    </div>
+  </div>
+
+  <div class="card" id="enB" hidden>
+    <p class="small" id="enBCount"></p>
+    <p class="small"><b>Short metaphor</b></p>
+    <p class="simile" id="enB1"></p>
+    <p class="hint" id="enBTask"></p>
+    <label for="enBInput" class="small">Your richer metaphor</label>
+    <textarea id="enBInput" rows="3"></textarea>
+    <div class="row">
+      <button class="btn teal" id="enBSave">Save to notebook</button>
+      <button class="btn ghost" id="enBEx">Show an example</button>
+      <button class="btn ghost" id="enBNext">Next metaphor</button>
+    </div>
+    <p class="small" style="margin-top:.8rem">Ask yourself: Can a friend see the picture in their head?</p>
+    <p class="fb" id="enBFb" role="status"></p>
+    <p class="hint" id="enBExTxt" hidden></p>
   </div>
 </section>
 
@@ -428,6 +523,29 @@ BODY.forEach(b=>b.re=new RegExp('\\b'+b.stem+'s?\\b','i'));
 const byName=n=>BODY.find(b=>b.n===n);
 const detectPart=t=>{const b=BODY.find(b=>b.re.test(t));return b?b.n:'';};
 const OBJECTS=['a clock','a storm','a mirror','a staircase','a candle','a suitcase','a river','a key','a lighthouse','a blanket','a spider web','a volcano','a radio','a garden','a boat','a cloud'];
+const MM={
+ smile:{pl:0,facts:{white:['milk','ivory','pearls','snow'],wide:['a rainbow','a bridge','a crescent moon','an open door'],bright:['a lamp','sunshine','a firework','a lighthouse'],crooked:['a broken fence','a bent spoon','a tilted picture','a lazy river'],red:['cherries','a rose','a ladybug','a tomato']},
+  fin:['covered with tartar','that I’d spend all my money for','from ear to ear','hiding a secret','that melts my bad mood','with a piece of spinach stuck in it']},
+ eyes:{pl:1,facts:{blue:['oceans','sapphires','the summer sky','swimming pools'],big:['saucers','full moons','lakes','headlights'],dark:['olives','coffee','midnight','black holes'],bright:['stars','lamps','lighthouses','fireflies'],tired:['empty cups','closed shops','sleepy cats','dim candles']},
+  fin:['that never lie to me','that follow me around the room','full of tiny fish','that desperately need a nap','that I could swim in','hidden behind messy glasses']},
+ hair:{pl:0,facts:{long:['a waterfall','a river','a curtain','a rope'],curly:['a bowl of spaghetti','a bird’s nest','springs','a jungle'],soft:['silk','cotton candy','a cloud','velvet'],messy:['a storm','a haystack','a bush','a tornado']},
+  fin:['through my fingers','where a family of birds could live','that never obeys the comb','dancing in the wind','with a pencil lost inside','that smells of coconut']},
+ nose:{pl:0,facts:{big:['a mountain','a potato','a volcano','a ski jump'],small:['a button','a pea','a little mushroom','a cherry'],red:['a tomato','a strawberry','a traffic light','a hot coal'],pointy:['a pencil','a beak','a carrot','an arrow']},
+  fin:['with snot coming out of it','that smells trouble from a mile away','that sneezes every spring','that always knows when it’s lunch time','where my glasses slide down','that is always in other people’s business']},
+ skin:{pl:0,facts:{smooth:['velvet','silk','porcelain','a lake at dawn'],rough:['sandpaper','tree bark','a cat’s tongue','a brick wall'],wrinkled:['old paper','a map','a walnut','a crumpled letter'],warm:['a blanket','toast','a summer afternoon','a sunny stone']},
+  fin:['that remembers the sun','that tells a thousand stories','that blushes before its owner does','with a scar that keeps a secret','that smells of vanilla','that sticks to the car seat in summer']},
+ hands:{pl:1,facts:{big:['shovels','boats','baseball gloves','frying pans'],cold:['ice cubes','icicles','fridge doors','snowballs'],rough:['sandpaper','bark','old leather','bricks'],soft:['pillows','feathers','warm bread','cotton clouds']},
+  fin:['that polish every handshake','that carry my whole day','that never stop talking','sticky with jam','that always find the cookies','with ink on every finger']},
+ eyebrows:{pl:1,facts:{thick:['caterpillars','bushes','black clouds','hedges'],thin:['pencil lines','threads','tiny bridges','crescent moons'],dark:['storm clouds','charcoal','shadows','brushstrokes'],curved:['rainbows','bridges','arches','roofs']},
+  fin:['crawling across the forehead','that say more than the mouth','that jump when the truth runs away','that need a haircut','that predict the weather','that never agree with each other']},
+ cheeks:{pl:1,facts:{red:['tomatoes','apples','strawberries','a sunset'],round:['balloons','dumplings','full moons','peaches'],soft:['pillows','marshmallows','warm bread rolls','clouds'],dimpled:['moon craters','tiny wells','pressed cookies','little caves']},
+  fin:['that blush before the brain knows why','that grandmas can’t stop squeezing','hiding two secret dimples','puffed up with soup','that inflate before a sneeze','stuffed with chewing gum']},
+ teeth:{pl:1,facts:{white:['pearls','piano keys','snow','ivory'],crooked:['a broken fence','leaning towers','dominoes','tipsy soldiers'],small:['rice grains','tiny pebbles','baby corn','seeds'],shiny:['mirrors','diamonds','headlights','chrome']},
+  fin:['covered with tartar','hiding behind a smile','that bite the homework','that chatter in winter','that guard the tongue','with a poppy seed stuck between them']},
+ ears:{pl:1,facts:{big:['satellite dishes','umbrellas','wings','jug handles'],small:['buttons','tiny mushrooms','seashells','coins'],red:['tomatoes','hot coals','lanterns','strawberries'],pointy:['arrows','elf hats','leaves','sails']},
+  fin:['that catch every secret','tuned to the wrong radio station','that flap in the wind','that collect gossip','that turn red when the truth arrives','that carry my glasses']}
+};
+const MM_PARTS=Object.keys(MM);
 const MOODS=['proud','nervous','sleepy','angry','happy','shy','brave','lonely'];
 const BOOSTS=[
  'Add a VERB. What does it do? (…that dances, …that never sleeps)',
@@ -525,6 +643,7 @@ function go(id){
   if(id==='notebook')renderNotes();
   if(id==='poem')buildPoem();
   if(id==='body')bodyWheel.draw();
+  if(id==='machine')mmWheel.draw();
   if(id==='common'){cmBodyWheel.draw();cmObjWheel.draw();}
   if(id==='detective'&&!dt.started)dtStart();
   try{history.replaceState(null,'','#'+id);}catch(e){}
@@ -584,7 +703,8 @@ function wheelClick(canvas,fn){
 const bodyWheel=makeWheel($('#bodyCanvas'),BODY.map(b=>b.n));
 const cmBodyWheel=makeWheel($('#cmBody'),BODY.map(b=>b.n));
 const cmObjWheel=makeWheel($('#cmObj'),OBJECTS);
-if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{bodyWheel.draw();cmBodyWheel.draw();cmObjWheel.draw();});
+const mmWheel=makeWheel($('#mmCanvas'),MM_PARTS);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{bodyWheel.draw();cmBodyWheel.draw();cmObjWheel.draw();mmWheel.draw();});
 
 /* ---------- STATION 1: SWITCH ---------- */
 let swOrder=shuffle(SWITCH.map((_,i)=>i)),swPos=0,swOk=false;
@@ -667,6 +787,139 @@ $('#cmHint').addEventListener('click',()=>{
   ];
   const e=$('#cmHintTxt');e.textContent=pick(q);e.hidden=false;
 });
+
+/* ---------- STATION: METAPHOR MACHINE ---------- */
+const mm={part:null,fact:null,img:null,fin:null};
+const mmBase=()=>$('#mmSubj').value+' '+mm.part+' '+(MM[mm.part].pl?'are':'is')+' ';
+function mmChips(box,arr,sel,onPick){
+  box.innerHTML='';
+  arr.forEach(x=>{const c=document.createElement('button');c.type='button';c.className='chip'+(x===sel?' on':'');c.textContent=x;c.addEventListener('click',()=>onPick(x));box.appendChild(c);});
+}
+function mmText(){
+  if(!mm.img)return;
+  $('#mmSimile').innerHTML=mmBase()+mm.fact+' <mark>like</mark> '+mm.img+'.';
+  $('#mmCut').textContent='Cut the “like”: '+mmBase()+mm.img+'.';
+  $('#mmInput').value=mmBase()+mm.img+(mm.fin?' '+mm.fin:'')+'.';
+}
+function mmPickFact(f){
+  mm.fact=f;mm.img=null;mm.fin=null;
+  mmChips($('#mmFacts'),Object.keys(MM[mm.part].facts),f,mmPickFact);
+  $('#mmS2').hidden=false;$('#mmS3').hidden=true;$('#mmS4').hidden=true;
+  $('#mmSimile').textContent='';$('#mmCut').textContent='';
+  mmChips($('#mmImgs'),MM[mm.part].facts[f],null,mmPickImg);
+}
+function mmPickImg(i){
+  mm.img=i;mm.fin=null;
+  mmChips($('#mmImgs'),MM[mm.part].facts[mm.fact],i,mmPickImg);
+  mmChips($('#mmFins'),MM[mm.part].fin,null,mmPickFin);
+  $('#mmS3').hidden=false;$('#mmS4').hidden=false;
+  mmText();
+}
+function mmPickFin(x){
+  mm.fin=x;
+  mmChips($('#mmFins'),MM[mm.part].fin,x,mmPickFin);
+  mmText();
+}
+async function mmSpinNow(){
+  if(mmWheel.busy)return;
+  const i=await mmWheel.spin();
+  mm.part=MM_PARTS[i];mm.fact=mm.img=mm.fin=null;
+  $('#mmEmpty').hidden=true;$('#mmOut').hidden=false;
+  $('#mmPart').textContent=mm.part;
+  $('#mmS2').hidden=true;$('#mmS3').hidden=true;$('#mmS4').hidden=true;
+  mmChips($('#mmFacts'),Object.keys(MM[mm.part].facts),null,mmPickFact);
+}
+wheelClick($('#mmCanvas'),mmSpinNow);
+$('#mmSubj').addEventListener('change',mmText);
+$('#mmRandom').addEventListener('click',()=>{if(mm.img)mmPickFin(pick(MM[mm.part].fin));});
+$('#mmSave').addEventListener('click',()=>saveNote($('#mmInput').value,'machine'));
+
+/* ---------- STATION: ENRICH ---------- */
+const EN_LABEL={action:'an action (what it does)',place:'a place or a time',feeling:'a feeling',sense:'sense words'};
+const EN_DIFF=[
+ ['My heart is a drum.','My heart is a drum <mark>that calls every butterfly to dance</mark>.','action','The new part says what the drum DOES: it calls the butterflies.'],
+ ['Her smile is a sunrise.','Her smile is a sunrise <mark>on a grey Monday morning</mark>.','place','The new part says WHEN and WHERE: a grey Monday morning.'],
+ ['His voice is velvet.','His voice is velvet <mark>talking to my fears</mark>.','action','Talking is an ACTION. The velvet speaks, and it speaks to my fears.'],
+ ['Her cheeks are apples.','Her cheeks are <mark>shiny, rosy</mark> apples.','sense','Shiny and rosy tell us how the apples LOOK.'],
+ ['His shoulders are mountains.','His shoulders are mountains <mark>carrying the whole sky</mark>.','action','Carrying is an ACTION. The mountains do something.'],
+ ['Her eyes are lamps.','Her eyes are lamps <mark>in the dark</mark>.','place','“In the dark” tells us WHERE the lamps are.'],
+ ['Her hair is silk.','Her hair is silk <mark>through my fingers</mark>.','sense','This is TOUCH: someone is stroking it, and we can feel the silk slipping through the fingers.'],
+ ['His voice is thunder.','His voice is <mark>deep, rumbling</mark> thunder.','sense','Deep and rumbling are SOUND words.'],
+ ['His stare is a cold hand.','His stare is a cold hand <mark>that makes my stomach shrink</mark>.','feeling','The new part tells us the FEELING inside the body: fear that makes the stomach shrink.'],
+ ['His nose is a volcano.','His nose is a volcano <mark>with snot coming out of it</mark>.','action','The volcano ERUPTS! Snot is coming out. Yuck, but funny. 🤧'],
+ ['Her teeth are pearls.','Her teeth are pearls <mark>covered with tartar</mark>.','sense','Covered with tartar shows how they LOOK: yellow and crusty. Not so precious anymore!']
+];
+const EN_ADD=[
+ ['The ocean is the sky.','place','The ocean is the sky where fish fly.'],
+ ['My eyes are lamps.','action','My eyes are lamps that never go to sleep.'],
+ ['Her teeth are pearls.','sense','Her teeth are pearls covered with tartar.'],
+ ['His fingers are spiders.','action','His fingers are spiders dancing over the piano keys.'],
+ ['Your smile is milk.','feeling','Your smile is milk that feeds my soul.'],
+ ['Her skin is velvet.','sense','Her skin is soft, golden velvet.'],
+ ['His heart is a locked door.','feeling','His heart is a locked door that makes strangers feel small.'],
+ ['Her cheeks are apples.','sense','Her cheeks are shiny, rosy apples.'],
+ ['My feet are boats.','place','My feet are boats sailing across the kitchen floor.'],
+ ['His eyebrows are caterpillars.','action','His eyebrows are caterpillars crawling across his forehead.'],
+ ['His voice is velvet.','action','His voice is velvet talking to my fears.'],
+ ['Her hair is silk.','sense','Her hair is silk through my fingers.'],
+ ['His stare is a cold hand.','feeling','His stare is a cold hand that makes my stomach shrink.'],
+ ['His nose is a volcano.','action','His nose is a volcano with snot coming out of it.']
+];
+const EN_TASK={
+ action:'Add an ACTION: what does it do? (…that dances, …that never sleeps)',
+ place:'Add a PLACE or a TIME: where or when? (…in the dark, …on a Monday morning)',
+ feeling:'Add a FEELING: how does it make people feel? (…that makes me feel safe)',
+ sense:'Add SENSE words: how does it look, sound or feel? (shiny, rumbling, rough)'
+};
+const en={dOrder:[],dPos:0,dScore:0,dDone:false,aOrder:shuffle(EN_ADD.map((_,i)=>i)),aPos:0};
+function enMode(m){
+  $('#enA').hidden=m!=='A';$('#enB').hidden=m!=='B';
+  $('#enTabA').classList.toggle('ghost',m!=='A');$('#enTabB').classList.toggle('ghost',m!=='B');
+}
+$('#enTabA').addEventListener('click',()=>enMode('A'));
+$('#enTabB').addEventListener('click',()=>enMode('B'));
+function enDStart(){en.dOrder=shuffle(EN_DIFF.map((_,i)=>i)).slice(0,6);en.dPos=0;en.dScore=0;en.dDone=false;$('#enAWrap').hidden=false;$('#enAEnd').hidden=true;enDRender();}
+function enDRender(){
+  const it=EN_DIFF[en.dOrder[en.dPos]];
+  $('#enACount').textContent='Pair '+(en.dPos+1)+' of '+en.dOrder.length;
+  $('#enA1').textContent=it[0];$('#enA2').innerHTML=it[1];
+  $('#enAFb').textContent='';$('#enAFb').className='fb';$('#enANext').hidden=true;
+  $$('#enAChoices button').forEach(b=>b.disabled=false);
+}
+$('#enAChoices').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b||b.disabled)return;
+  const it=EN_DIFF[en.dOrder[en.dPos]],right=b.dataset.a===it[2];
+  $$('#enAChoices button').forEach(x=>x.disabled=true);
+  if(right)en.dScore++;
+  const fb=$('#enAFb');fb.className='fb '+(right?'ok':'bad');
+  fb.textContent=(right?'Correct! ':'Not quite. The writer added '+EN_LABEL[it[2]]+'. ')+it[3];
+  const nx=$('#enANext');nx.hidden=false;nx.textContent=en.dPos===en.dOrder.length-1?'See my score':'Next';
+});
+$('#enANext').addEventListener('click',()=>{
+  if(en.dPos<en.dOrder.length-1){en.dPos++;enDRender();return;}
+  en.dDone=true;addStars(en.dScore>=5?2:1);
+  $('#enAWrap').hidden=true;$('#enAEnd').hidden=false;
+  $('#enAEndTxt').textContent='You spotted '+en.dScore+' out of '+en.dOrder.length+'. '+(en.dScore>=5?'Sharp eyes! 👀':'Good practice. Try again!');
+});
+$('#enAAgain').addEventListener('click',enDStart);
+enDStart();
+
+function enBRender(){
+  const it=EN_ADD[en.aOrder[en.aPos]];
+  $('#enBCount').textContent='Metaphor '+(en.aPos+1)+' of '+EN_ADD.length;
+  $('#enB1').textContent=it[0];
+  $('#enBTask').textContent=EN_TASK[it[1]];
+  $('#enBInput').value=it[0].replace(/\.$/,'')+' ';
+  $('#enBFb').textContent='';$('#enBExTxt').hidden=true;
+}
+$('#enBSave').addEventListener('click',()=>{
+  const it=EN_ADD[en.aOrder[en.aPos]],base=it[0].replace(/\.$/,''),t=$('#enBInput').value.trim(),fb=$('#enBFb');
+  if(t.length<=base.length+2){fb.className='fb warn';fb.textContent='Add something to the metaphor first.';return;}
+  fb.textContent='';saveNote(t,'enrich');
+});
+$('#enBEx').addEventListener('click',()=>{const e=$('#enBExTxt');e.textContent='Example: '+EN_ADD[en.aOrder[en.aPos]][2];e.hidden=false;});
+$('#enBNext').addEventListener('click',()=>{en.aPos=(en.aPos+1)%EN_ADD.length;if(en.aPos===0)en.aOrder=shuffle(en.aOrder);enBRender();});
+enBRender();
 
 /* ---------- STATION 4: LADDER ---------- */
 const ladPart=$('#ladPart');
@@ -781,7 +1034,7 @@ $('#poemCopy').addEventListener('click',()=>{
 $('#poemPrint').addEventListener('click',()=>window.print());
 
 /* ---------- NOTEBOOK ---------- */
-const SRC={cut:'Cut the “like”',wheel:'Body Wheel',common:'Common Ground',ladder:'Ladder'};
+const SRC={machine:'Metaphor Machine',enrich:'Enrich the Metaphor',cut:'Cut the “like”',wheel:'Body Wheel',common:'Common Ground',ladder:'Ladder'};
 function renderNotes(){
   const f=$('#nbFilter'),cur=f.value||'all';
   const parts=[...new Set(S.notes.map(n=>n.part).filter(Boolean))];
